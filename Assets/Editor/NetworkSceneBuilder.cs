@@ -16,7 +16,7 @@ namespace NTG.EditorTools
     /// Generates: PlayerCapsule, NetworkManager, UICanvas prefabs and the four scenes
     /// (ServerEntry, ClientMenu, Lobby, Game), and sets the build scene list.
     ///
-    /// Runtime scripts (ClientMenuUI, LobbyManager, ...) are wired automatically
+    /// Runtime scripts (SessionMenuUI, LobbyUI, ...) are wired automatically
     /// IF they exist in the project. Safe to re-run later to add the wiring
     /// once the scripts are in — it rebuilds everything from scratch.
     /// </summary>
@@ -147,17 +147,13 @@ namespace NTG.EditorTools
             AddEventSystem();
             var canvas = InstantiateCanvas(canvasPrefab, scene);
 
-            MakeText(canvas, "Title", "NTG MULTIPLAYER", new Vector2(0, 400), new Vector2(1000, 110), 64, TextAnchor.MiddleCenter);
-            var address = MakeInput(canvas, "AddressInput", "Server address (e.g. 1.2.3.4)", new Vector2(0, 180), new Vector2(820, 100));
-            var port = MakeInput(canvas, "PortInput", "External port (e.g. 30000)", new Vector2(0, 50), new Vector2(820, 100), InputField.ContentType.IntegerNumber);
-            var connect = MakeButton(canvas, "ConnectButton", "CONNECT", new Vector2(0, -130), new Vector2(820, 120));
-            var status = MakeText(canvas, "StatusText", "Not connected", new Vector2(0, -300), new Vector2(1000, 100), 30, TextAnchor.MiddleCenter);
+            MakeText(canvas, "Title", "NTG MULTIPLAYER", new Vector2(0, 350), new Vector2(1000, 110), 64, TextAnchor.MiddleCenter);
+            var findMatch = MakeButton(canvas, "FindMatchButton", "FIND MATCH", new Vector2(0, 100), new Vector2(700, 130));
+            var status = MakeText(canvas, "StatusText", "", new Vector2(0, -150), new Vector2(1400, 120), 30, TextAnchor.MiddleCenter);
 
-            var ui = AddScriptIfExists(canvas.gameObject, "ClientMenuUI");
+            var ui = AddScriptIfExists(canvas.gameObject, "SessionMenuUI");
             Wire(ui,
-                ("addressInput", address),
-                ("portInput", port),
-                ("connectButton", connect),
+                ("findMatchButton", findMatch),
                 ("statusText", status));
 
             Save(scene, ClientMenuPath);
@@ -167,25 +163,23 @@ namespace NTG.EditorTools
         {
             Scene scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
-            var lobbyRoot = new GameObject("LobbyRoot");
-            lobbyRoot.AddComponent<NetworkObject>();
-            AddScriptIfExists(lobbyRoot, "LobbyManager");
-
             AddCameraAndLight();
             AddEventSystem();
             var canvas = InstantiateCanvas(canvasPrefab, scene);
 
             MakeText(canvas, "Title", "LOBBY", new Vector2(0, 460), new Vector2(900, 100), 56, TextAnchor.MiddleCenter);
-            var roster = MakeText(canvas, "RosterText", "...", new Vector2(0, 130), new Vector2(900, 420), 34, TextAnchor.UpperLeft);
-            var status = MakeText(canvas, "StatusText", "Waiting for players", new Vector2(0, -180), new Vector2(1000, 80), 30, TextAnchor.MiddleCenter);
-            var start = MakeButton(canvas, "StartButton", "START MATCH", new Vector2(-260, -380), new Vector2(500, 110));
-            var leave = MakeButton(canvas, "LeaveButton", "LEAVE", new Vector2(260, -380), new Vector2(500, 110));
+            var roster = MakeText(canvas, "RosterText", "...", new Vector2(0, 150), new Vector2(1000, 420), 34, TextAnchor.UpperLeft);
+            var status = MakeText(canvas, "StatusText", "Waiting for players", new Vector2(0, -160), new Vector2(1400, 80), 30, TextAnchor.MiddleCenter);
+            var start = MakeButton(canvas, "StartButton", "START MATCH", new Vector2(-260, -350), new Vector2(500, 110));
+            var ready = MakeButton(canvas, "ReadyButton", "READY", new Vector2(260, -350), new Vector2(500, 110));
+            var leave = MakeButton(canvas, "LeaveButton", "LEAVE", new Vector2(0, -490), new Vector2(400, 80));
 
             var ui = AddScriptIfExists(canvas.gameObject, "LobbyUI");
             Wire(ui,
                 ("rosterText", roster),
                 ("statusText", status),
                 ("startButton", start),
+                ("readyButton", ready),
                 ("leaveButton", leave));
 
             Save(scene, LobbyPath);
