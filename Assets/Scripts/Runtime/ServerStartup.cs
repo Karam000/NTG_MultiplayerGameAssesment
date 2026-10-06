@@ -11,7 +11,6 @@ namespace NTG
     /// </summary>
     public class ServerStartup : MonoBehaviour
     {
-        public const string LobbySceneName = "Lobby";
         public const string GameSceneName = "Game";
 
         [SerializeField] private ushort defaultPort = 7777;
@@ -38,7 +37,7 @@ namespace NTG
         private void OnServerStarted()
         {
             Debug.Log($"[SERVER] Listening on 0.0.0.0:{GetPort()} (udp)");
-            NetworkManager.Singleton.SceneManager.LoadScene(LobbySceneName, LoadSceneMode.Single);
+            NetworkManager.Singleton.SceneManager.LoadScene(GameSceneName, LoadSceneMode.Single);
         }
 
         private ushort GetPort()
