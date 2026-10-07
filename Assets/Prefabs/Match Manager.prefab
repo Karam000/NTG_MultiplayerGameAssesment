@@ -45,14 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3348907975
+  GlobalObjectIdHash: 2616211090
   InScenePlacedSourceGlobalObjectIdHash: 0
   m_InScenePlacedDisabledByDefault: 0
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
-  m_InScenePlaced: 1
+  m_InScenePlaced: 0
   ActiveSceneSynchronization: 0
   SceneMigrationSynchronization: 0
   SpawnWithObservers: 1
@@ -75,6 +75,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   minPlayers: 2
   countdownSeconds: 3
+  objectivePrefab: {fileID: 5930254190087353414, guid: 5c6c24e6bb7e5d34983cebd06d5d02b2, type: 3}
+  objectiveCount: 3
   State:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
