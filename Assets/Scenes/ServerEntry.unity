@@ -119,7 +119,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &329252190
+--- !u!1001 &55795750
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -176,7 +176,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f097ddd6c081a8646872ff101a280add, type: 3}
---- !u!1 &797710885
+--- !u!1 &1298768989
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -184,7 +184,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 797710886}
+  - component: {fileID: 1298768992}
+  - component: {fileID: 1298768991}
+  - component: {fileID: 1298768990}
   m_Layer: 0
   m_Name: ServerRoot
   m_TagString: Untagged
@@ -192,13 +194,39 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &797710886
+--- !u!114 &1298768990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1298768989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 455c592609afd0b4bbaabf8a0a551d7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NTG.PlayerSpawner
+  playerPrefab: {fileID: 6572345842887277983, guid: 19865949f7103e54684f89ac27ab6287, type: 3}
+--- !u!114 &1298768991
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1298768989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91915a211cc952d4a840aabf486ab258, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NTG.ServerStartup
+  defaultPort: 7777
+--- !u!4 &1298768992
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 797710885}
+  m_GameObject: {fileID: 1298768989}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -211,5 +239,5 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 329252190}
-  - {fileID: 797710886}
+  - {fileID: 55795750}
+  - {fileID: 1298768992}

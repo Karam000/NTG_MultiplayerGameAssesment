@@ -13,14 +13,14 @@ namespace NTG
         {
             var nm = NetworkManager.Singleton;
             nm.SceneManager.OnLoadEventCompleted += OnLoadEventCompleted;
-            nm.OnClientConnected += OnClientConnected;
+            nm.OnClientConnectedCallback += OnClientConnected;
         }
 
         private void OnDestroy()
         {
             if (NetworkManager.Singleton == null) return;
             NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadEventCompleted;
-            NetworkManager.Singleton.OnClientConnected -= OnClientConnected;
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
         }
 
         private void OnLoadEventCompleted(string sceneName, LoadSceneMode mode,
