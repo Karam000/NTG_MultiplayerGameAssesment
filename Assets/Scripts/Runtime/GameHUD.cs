@@ -12,8 +12,27 @@ namespace NTG
 
         private void Start()
         {
-            infoText.text = $"In Game — Client #{NetworkManager.Singleton.LocalClientId}";
             disconnectButton.onClick.AddListener(OnDisconnectClicked);
+        }
+
+        private void Update()
+        {
+            var nm = NetworkManager.Singleton;
+            if (nm == null || !nm.IsConnectedClient) return;
+
+            string team = "?";
+            var po = nm.LocalClient != null ? nm.LocalClient.PlayerObject : null;
+            if (po != null)
+            {
+                int t = po.GetComponent<PlayerObject>().TeamIndex.Value;
+                team = t == 0 ? "A" : t == 1 ? "B" : "?";
+            }
+
+            string state = MatchManager.Instance != null
+                ? MatchManager.Instance.State.Value.ToString()
+                : "-";
+
+            infoText.text = $"Client #{nm.LocalClientId}  |  Team {team}  |  {state}";
         }
 
         private async void OnDisconnectClicked()

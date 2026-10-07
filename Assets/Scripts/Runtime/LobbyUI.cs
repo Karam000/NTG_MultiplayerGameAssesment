@@ -76,8 +76,7 @@ namespace NTG
                 bool ready = SessionManager.IsPlayerReady(p);
 
                 sb.Append(leader ? "* " : "  ");
-                sb.Append("Player-");
-                sb.Append(p.Id.Length > 8 ? p.Id.Substring(0, 8) : p.Id);
+                sb.Append(SessionManager.PlayerName(p));
                 if (you) sb.Append(" (you)");
                 if (leader) sb.Append(" [leader]");
                 if (ready) sb.Append(" [ready]");

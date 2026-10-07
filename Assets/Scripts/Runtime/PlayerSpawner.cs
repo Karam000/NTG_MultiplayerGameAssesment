@@ -8,8 +8,23 @@ namespace NTG
     public class PlayerSpawner : MonoBehaviour
     {
         [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private GameObject matchManagerPrefab;
+
+        private void EnsureMatchManager()
+        {
+            if (MatchManager.Instance != null) return;
+            var go = Instantiate(matchManagerPrefab);
+            go.GetComponent<NetworkObject>().Spawn();
+            Debug.Log("[SERVER] MatchManager spawned");
+        }
 
         private void Start()
+        {
+            // NetworkManager.SceneManager only exists after StartServer() -> subscribe post-startup.
+            NetworkManager.Singleton.OnServerStarted += OnServerStarted;
+        }
+
+        private void OnServerStarted()
         {
             var nm = NetworkManager.Singleton;
             nm.SceneManager.OnLoadEventCompleted += OnLoadEventCompleted;
@@ -19,7 +34,9 @@ namespace NTG
         private void OnDestroy()
         {
             if (NetworkManager.Singleton == null) return;
-            NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadEventCompleted;
+            NetworkManager.Singleton.OnServerStarted -= OnServerStarted;
+            if (NetworkManager.Singleton.SceneManager != null)
+                NetworkManager.Singleton.SceneManager.OnLoadEventCompleted -= OnLoadEventCompleted;
             NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
         }
 
@@ -27,6 +44,8 @@ namespace NTG
             List<ulong> clientsCompleted, List<ulong> clientsTimedOut)
         {
             if (sceneName != ServerStartup.GameSceneName) return;
+
+            EnsureMatchManager();
 
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
                 SpawnFor(clientId);
@@ -49,7 +68,9 @@ namespace NTG
 
             var go = Instantiate(playerPrefab, pos, Quaternion.identity);
             go.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId);
-            Debug.Log($"[SERVER] Spawned player object for client {clientId}");
+            int team = MatchManager.Instance.ServerAssignTeam();
+            go.GetComponent<PlayerObject>().TeamIndex.Value = team;
+            Debug.Log($"[SERVER] Spawned player object for client {clientId}, team {team}");
         }
     }
 }

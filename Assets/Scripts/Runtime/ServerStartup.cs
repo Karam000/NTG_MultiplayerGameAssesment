@@ -20,9 +20,13 @@ namespace NTG
             DontDestroyOnLoad(gameObject);
         }
 
+        private const int MaxClients = 8;
+
         private void Start()
         {
             Application.targetFrameRate = 60;
+
+            NetworkManager.Singleton.ConnectionApprovalCallback = ApproveConnection;
 
             ushort port = GetPort();
             var transport = (UnityTransport)NetworkManager.Singleton.NetworkConfig.NetworkTransport;
@@ -32,6 +36,14 @@ namespace NTG
 
             if (!NetworkManager.Singleton.StartServer())
                 Debug.LogError("[SERVER] StartServer() failed");
+        }
+
+        private void ApproveConnection(NetworkManager.ConnectionApprovalRequest request,
+            NetworkManager.ConnectionApprovalResponse response)
+        {
+            response.Approved = NetworkManager.Singleton.ConnectedClients.Count < MaxClients;
+            response.CreatePlayerObject = false; // spawned manually by PlayerSpawner
+            if (!response.Approved) response.Reason = "Server full";
         }
 
         private void OnServerStarted()

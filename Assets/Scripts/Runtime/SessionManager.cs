@@ -55,7 +55,7 @@ namespace NTG
                     Name = "NTG Match",
                     Type = SessionType,
                     MaxPlayers = MaxPlayers,
-                    IsPrivate = false
+                    IsPrivate = false // private sessions are not visible to quick join
                 };
                 var quickJoinOptions = new QuickJoinOptions
                 {
@@ -106,6 +106,12 @@ namespace NTG
         public static bool IsPlayerReady(IReadOnlyPlayer player)
         {
             return player.Properties.TryGetValue(ReadyKey, out var prop) && prop.Value == "1";
+        }
+
+        public static string PlayerName(IReadOnlyPlayer player)
+        {
+            string id = player.Id;
+            return "Player-" + (id.Length > 6 ? id.Substring(0, 6) : id);
         }
 
         // Leader only: publish the dedicated server's public endpoint to the session.
