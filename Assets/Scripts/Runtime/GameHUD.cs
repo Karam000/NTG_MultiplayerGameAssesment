@@ -17,6 +17,13 @@ namespace NTG
         {
             disconnectButton.onClick.AddListener(OnDisconnectClicked);
             ObjectiveObject.OnAnnouncement += OnAnnouncement;
+            SharedBall.OnAnnouncement += OnAnnouncement;
+            MatchManager.OnAnnouncement += OnAnnouncement;
+
+            // rect is sized for one line; hints/announcements add lines 2-3
+            infoText.verticalOverflow = VerticalWrapMode.Overflow;
+            infoText.horizontalOverflow = HorizontalWrapMode.Overflow;
+            infoText.alignment = TextAnchor.UpperCenter;
 
             // goal zone visual (deterministic position -> each client creates its own)
             var zone = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
@@ -31,6 +38,8 @@ namespace NTG
         private void OnDestroy()
         {
             ObjectiveObject.OnAnnouncement -= OnAnnouncement;
+            SharedBall.OnAnnouncement -= OnAnnouncement;
+            MatchManager.OnAnnouncement -= OnAnnouncement;
         }
 
         private void OnAnnouncement(string msg)
@@ -39,10 +48,26 @@ namespace NTG
             _announceUntil = Time.time + 3f;
         }
 
+        private bool _endpointClearRequested;
+
         private void Update()
         {
             var nm = NetworkManager.Singleton;
             if (nm == null || !nm.IsConnectedClient) return;
+
+            bool finished = MatchManager.IsFinished;
+
+            // leader clears the stale endpoint so nobody auto-reconnects to a dead server
+            if (finished && !_endpointClearRequested &&
+                SessionManager.IsLeader && SessionManager.TryGetServerEndpoint(out _, out _))
+            {
+                _endpointClearRequested = true;
+                _ = SessionManager.ClearServerEndpoint();
+            }
+
+            var label = disconnectButton.GetComponentInChildren<Text>();
+            if (label != null)
+                label.text = finished ? "BACK TO LOBBY" : "DISCONNECT";
 
             string team = "?";
             var po = nm.LocalClient != null ? nm.LocalClient.PlayerObject : null;
@@ -66,8 +91,22 @@ namespace NTG
         {
             if (po == null) return "";
 
+            if (MatchManager.Instance != null && MatchManager.Instance.State.Value == MatchState.Finished)
+            {
+                int w = MatchManager.Instance.WinningTeam.Value;
+                return $"MATCH FINISHED - Team {(w == 0 ? "A" : "B")} wins!";
+            }
+
+            var player = po.GetComponent<PlayerObject>();
+            if (player != null && player.IsEliminated.Value)
+                return "ELIMINATED - spectating";
+
             ulong me = NetworkManager.Singleton.LocalClientId;
             Vector3 myPos = po.transform.position;
+
+            var ball = SharedBall.Instance;
+            if (ball != null && ball.State.Value == BallState.Carried && ball.PossessorClientId.Value == me)
+                return "SPACE: throw the ball (you are slowed)";
 
             foreach (var obj in ObjectiveObject.All)
             {
@@ -81,6 +120,10 @@ namespace NTG
                         : "Carrying objective - take it to the GREEN zone";
                 }
             }
+
+            if (ball != null && ball.State.Value == BallState.OnGround &&
+                Vector3.Distance(myPos, ball.transform.position) <= ObjectiveObject.InteractRange)
+                return "Press E to pick up the BALL";
 
             foreach (var obj in ObjectiveObject.All)
             {
@@ -118,9 +161,19 @@ namespace NTG
         private async void OnDisconnectClicked()
         {
             disconnectButton.interactable = false;
+            bool finished = MatchManager.IsFinished;
             NetworkManager.Singleton.Shutdown();
-            await SessionManager.LeaveSession();
-            SceneManager.LoadScene("ClientMenu");
+
+            if (finished)
+            {
+                // match over: back to the session lobby (session is still active)
+                SceneManager.LoadScene("Lobby");
+            }
+            else
+            {
+                await SessionManager.LeaveSession();
+                SceneManager.LoadScene("ClientMenu");
+            }
         }
     }
 }

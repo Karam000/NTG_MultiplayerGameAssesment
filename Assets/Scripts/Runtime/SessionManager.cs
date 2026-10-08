@@ -148,5 +148,24 @@ namespace NTG
             ip = ipProp.Value;
             return true;
         }
+
+        // Leader only: clear the published endpoint (e.g. when the match ends)
+        // so returning to the lobby does not auto-reconnect to a stale server.
+        public static async Task ClearServerEndpoint()
+        {
+            if (!IsLeader) return;
+            try
+            {
+                var host = CurrentSession.AsHost();
+                host.SetProperty(ServerIpKey, null);
+                host.SetProperty(ServerPortKey, null);
+                await host.SavePropertiesAsync();
+                Debug.Log("[SESSION] Cleared server endpoint");
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[SESSION] ClearServerEndpoint failed: {e.Message}");
+            }
+        }
     }
 }

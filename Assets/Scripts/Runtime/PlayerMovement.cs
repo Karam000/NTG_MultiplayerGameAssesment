@@ -20,6 +20,7 @@ namespace NTG
         public static Vector2 TouchInputOverride;
 
         private Vector2 _input;
+        public Vector2 CurrentInput => _input;
         private uint _seq;
         private float _sendTimer;
         private float _broadcastTimer;
@@ -41,7 +42,10 @@ namespace NTG
         public override void OnNetworkSpawn()
         {
             _serverPos = transform.position;
+            _playerObject = GetComponent<PlayerObject>();
         }
+
+        private PlayerObject _playerObject;
 
         private void Update()
         {
@@ -71,6 +75,12 @@ namespace NTG
         {
             _input = ReadInput();
 
+            // eliminated or match over: no local prediction, no input traffic
+            bool frozen = MatchManager.IsFinished ||
+                          (_playerObject != null && _playerObject.IsEliminated.Value);
+            if (frozen)
+                _input = Vector2.zero;
+
             transform.position += new Vector3(_input.x, 0f, _input.y) * (moveSpeed * Time.deltaTime);
 
             if (_correction.sqrMagnitude > 0.0001f)
@@ -80,6 +90,8 @@ namespace NTG
                 transform.position += step;
                 _correction -= step;
             }
+
+            if (frozen) return; // no prediction, no input traffic
 
             _sendTimer += Time.deltaTime;
             if (_sendTimer >= 1f / sendRate)
@@ -145,6 +157,13 @@ namespace NTG
         [Rpc(SendTo.Server, Delivery = RpcDelivery.Unreliable)]
         private void InputServerRpc(Vector2 input, uint seq)
         {
+            // frozen players (eliminated / match finished) cannot move - server rejects their input
+            if (MatchManager.IsFinished || PlayerObject.IsClientEliminated(OwnerClientId))
+            {
+                _serverInput = Vector2.zero;
+                _lastProcessedSeq = seq; // keep reconciliation consistent
+                return;
+            }
             // validation: clamp magnitude; client sends intent only, never position,
             // so it can never exceed moveSpeed on the server
             _serverInput = Vector2.ClampMagnitude(input, 1f);

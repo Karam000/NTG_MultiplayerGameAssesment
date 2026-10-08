@@ -75,7 +75,7 @@ namespace NTG
             if (!TryGetCarrierPos(out Vector3 carrierPos))
             {
                 // carrier disconnected -> drop where it is, back to Available (G5 formalizes this)
-                ServerResetToAvailable();
+                ServerDrop();
                 return;
             }
 
@@ -90,6 +90,8 @@ namespace NTG
         {
             ulong sender = rpcParams.Receive.SenderClientId;
 
+            if (!MatchManager.IsPlaying) return;                    // server rejects gameplay outside Playing
+            if (PlayerObject.IsClientEliminated(sender)) return; // eliminated players cannot collect
             // race resolution: first validated request wins, everyone else sees State != Available
             if (State.Value != ObjectiveState.Available) return;
             if (IsCarryingAnything(sender)) return;
@@ -107,6 +109,8 @@ namespace NTG
         {
             ulong sender = rpcParams.Receive.SenderClientId;
 
+            if (!MatchManager.IsPlaying) return;
+            if (PlayerObject.IsClientEliminated(sender)) return;
             if (State.Value != ObjectiveState.Carried || CarrierClientId.Value != sender) return;
             if (!TryGetPlayerPos(sender, out Vector3 playerPos)) return;
             if (Vector3.Distance(playerPos, GoalZonePos) > GoalZoneRadius) return;
@@ -122,9 +126,21 @@ namespace NTG
             float end = Time.time + InteractDuration;
             while (Time.time < end)
             {
-                // server cancels if the carrier moved away (or dropped/disconnected)
-                if (!TryGetCarrierPos(out Vector3 pos) ||
-                    Vector3.Distance(pos, GoalZonePos) > GoalZoneRadius)
+                // server cancels if the carrier gets eliminated mid-interaction
+                if (PlayerObject.IsClientEliminated(clientId))
+                {
+                    ServerDrop();
+                    AnnounceClientRpc($"Objective {ObjectiveIndex.Value}: interaction cancelled");
+                    yield break;
+                }
+                // carrier disconnected -> drop it; moved away -> back to Carried (spec 12)
+                if (!TryGetCarrierPos(out Vector3 pos))
+                {
+                    ServerDrop();
+                    AnnounceClientRpc($"Objective {ObjectiveIndex.Value}: interaction cancelled");
+                    yield break;
+                }
+                if (Vector3.Distance(pos, GoalZonePos) > GoalZoneRadius)
                 {
                     State.Value = ObjectiveState.Carried; // invalid -> back to an appropriate state
                     AnnounceClientRpc($"Objective {ObjectiveIndex.Value}: interaction cancelled");
@@ -140,10 +156,10 @@ namespace NTG
             Debug.Log($"[SERVER] Objective {ObjectiveIndex.Value} COMPLETED by client {clientId}");
             AnnounceClientRpc($"Objective {ObjectiveIndex.Value} COMPLETED");
             if (MatchManager.Instance != null)
-                MatchManager.Instance.NotifyObjectiveCompleted(ObjectiveIndex.Value);
+                MatchManager.Instance.NotifyObjectiveCompleted(ObjectiveIndex.Value, clientId);
         }
 
-        private void ServerResetToAvailable()
+        public void ServerDrop()
         {
             if (_interactRoutine != null) StopCoroutine(_interactRoutine);
             State.Value = ObjectiveState.Available;
