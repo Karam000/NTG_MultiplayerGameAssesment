@@ -77,9 +77,15 @@ MonoBehaviour:
   countdownSeconds: 3
   objectivePrefab: {fileID: 5930254190087353414, guid: 5c6c24e6bb7e5d34983cebd06d5d02b2, type: 3}
   ballPrefab: {fileID: 7883078849293877751, guid: 63d8a9c8bb958154385c058da749b26c, type: 3}
-  objectiveCount: 3
+  objectiveCount: 4
+  objectivesToWin: 3
   State:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: 0
+  WinningTeam:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: -1

@@ -1,0 +1,13 @@
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\bin\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.deps.json
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\bin\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.dll
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\bin\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.pdb
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\obj\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.csproj.AssemblyReference.cache
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\obj\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.GeneratedMSBuildEditorConfig.editorconfig
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\obj\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.AssemblyInfoInputs.cache
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\obj\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.AssemblyInfo.cs
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\obj\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.csproj.CoreCompileInputs.cache
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\obj\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.sourcelink.json
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\obj\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.dll
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\obj\Release\net9.0\linux-x64\refint\NTGMultiplayer_ServerAllocator.dll
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\obj\Release\net9.0\linux-x64\NTGMultiplayer_ServerAllocator.pdb
+D:\Karamela projects\Interview tasks\NTG\Multiplayergametask_NTG\NTGMultiplayer_ServerAllocator\Project\obj\Release\net9.0\linux-x64\ref\NTGMultiplayer_ServerAllocator.dll

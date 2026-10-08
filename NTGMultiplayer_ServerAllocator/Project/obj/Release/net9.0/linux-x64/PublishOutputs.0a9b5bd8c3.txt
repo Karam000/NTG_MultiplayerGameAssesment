@@ -1,0 +1,8 @@
+C:\Users\dell\AppData\Local\Temp\NTGMultiplayer_ServerAllocator\module-compilation\NTGMultiplayer_ServerAllocator.dll
+C:\Users\dell\AppData\Local\Temp\NTGMultiplayer_ServerAllocator\module-compilation\NTGMultiplayer_ServerAllocator.deps.json
+C:\Users\dell\AppData\Local\Temp\NTGMultiplayer_ServerAllocator\module-compilation\NTGMultiplayer_ServerAllocator.pdb
+C:\Users\dell\AppData\Local\Temp\NTGMultiplayer_ServerAllocator\module-compilation\Unity.Services.CloudCode.Apis.dll
+C:\Users\dell\AppData\Local\Temp\NTGMultiplayer_ServerAllocator\module-compilation\Unity.Services.CloudCode.Core.dll
+C:\Users\dell\AppData\Local\Temp\NTGMultiplayer_ServerAllocator\module-compilation\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\dell\AppData\Local\Temp\NTGMultiplayer_ServerAllocator\module-compilation\Microsoft.Extensions.Logging.Abstractions.dll
+C:\Users\dell\AppData\Local\Temp\NTGMultiplayer_ServerAllocator\module-compilation\Newtonsoft.Json.dll
